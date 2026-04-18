@@ -6,7 +6,7 @@ export default function BottomNav() {
   const location = useLocation();
   const { cart } = useCartStore();
   
-  // ✅ Removed "/cart" from here so the nav shows up on the cart page!
+  // Hide on pages where it interrupts the flow, OR on larger desktop screens
   if (["/checkout", "/success", "/product"].some(path => location.pathname.includes(path))) {
     return null;
   }
@@ -20,7 +20,8 @@ export default function BottomNav() {
   ];
 
   return (
-    <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-[90%] max-w-[350px] z-50">
+    // Only visible on small and medium screens. Desktop users use Navbar.
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50 md:hidden">
       <motion.div 
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -45,7 +46,7 @@ export default function BottomNav() {
               </span>
 
               {item.badge > 0 && (
-                <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white dark:border-slate-800 animate-pulse"></span>
+                <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border border-[var(--bg-color)] animate-pulse"></span>
               )}
             </Link>
           );
