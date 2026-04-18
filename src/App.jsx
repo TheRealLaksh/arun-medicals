@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
+import BottomNav from "./components/layout/BottomNav"; // ✅ Imported BottomNav
 import ThemeToggle from "./components/ui/ThemeToggle";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
@@ -20,7 +21,8 @@ export default function App() {
 
         <Navbar />
 
-        <main className="px-4 pt-2 pb-24 overflow-y-auto flex-1 no-scrollbar relative">
+        {/* ✅ Increased pb-24 to pb-32 so content doesn't hide behind BottomNav */}
+        <main className="px-4 pt-2 pb-32 overflow-y-auto flex-1 no-scrollbar relative">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/category/:categoryName" element={<Category />} />
@@ -31,6 +33,9 @@ export default function App() {
           </Routes>
         </main>
         
+        {/* ✅ Added Bottom Navigation Bar here */}
+        <BottomNav /> 
+
         {/* Global Medical Disclaimer */}
         <div className="absolute bottom-0 w-full bg-yellow-500/10 backdrop-blur-md border-t border-yellow-500/30 py-1.5 px-4 z-50">
           <p className="text-[10px] text-center text-yellow-700 dark:text-yellow-400 font-bold uppercase tracking-wide">
