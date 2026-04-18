@@ -1,8 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
-import BottomNav from "./components/layout/BottomNav"; // ✅ Imported BottomNav
-import ThemeToggle from "./components/ui/ThemeToggle";
+import BottomNav from "./components/layout/BottomNav";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
 import Product from "./pages/Product";
@@ -15,13 +14,9 @@ export default function App() {
     <div className="min-h-screen font-sans flex justify-center items-center py-0 sm:py-8 bg-[var(--bg-color)]">
       <div className="w-full max-w-[400px] h-[100dvh] sm:h-[850px] bg-[var(--bg-color)] sm:rounded-[2.5rem] sm:shadow-2xl sm:border-[6px] border-gray-800 dark:border-gray-600 relative overflow-hidden flex flex-col">
         
-        <div className="absolute top-4 right-4 z-50">
-          <ThemeToggle />
-        </div>
-
+        {/* Navbar now handles the Theme Toggle internally */}
         <Navbar />
 
-        {/* ✅ Increased pb-24 to pb-32 so content doesn't hide behind BottomNav */}
         <main className="px-4 pt-2 pb-32 overflow-y-auto flex-1 no-scrollbar relative">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -33,7 +28,6 @@ export default function App() {
           </Routes>
         </main>
         
-        {/* ✅ Added Bottom Navigation Bar here */}
         <BottomNav /> 
 
         {/* Global Medical Disclaimer */}

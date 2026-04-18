@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { useCartStore } from "../../store/useCartStore";
+import ThemeToggle from "../ui/ThemeToggle"; // ✅ Import added
 
 export default function Navbar() {
   const { cart } = useCartStore();
   const location = useLocation();
   
-  // Hide navbar on specific pages for a cleaner flow
   if (location.pathname === "/checkout" || location.pathname === "/success") {
     return null;
   }
@@ -19,7 +19,7 @@ export default function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       className="sticky top-0 z-40 px-4 py-3 glass flex justify-between items-center rounded-b-3xl"
     >
-      {/* Left: Location & Delivery Time (Swiggy/Blinkit Style) */}
+      {/* Left: Location & Delivery Time */}
       <div className="flex flex-col">
         <div className="flex items-center gap-1.5">
           <span className="text-xl drop-shadow-sm">⚡</span>
@@ -35,7 +35,10 @@ export default function Navbar() {
       </div>
       
       {/* Right: Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* ✅ Theme Toggle is now safely in the flex layout */}
+        <ThemeToggle />
+
         <a 
           href="tel:07607790469" 
           className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-50 dark:bg-slate-800 text-primary border border-blue-100 dark:border-slate-700 shadow-sm hover:scale-105 transition-transform"
@@ -46,7 +49,7 @@ export default function Navbar() {
         {/* Cart Icon */}
         <Link 
           to="/cart" 
-          className="relative w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 dark:bg-slate-800 text-primary dark:text-white transition-all hover:scale-105"
+          className="relative w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 dark:bg-slate-800 text-primary dark:text-white transition-all hover:scale-105 flex-shrink-0"
         >
           <span className="text-lg">🛒</span>
           {totalItems > 0 && (
