@@ -6,8 +6,8 @@ export default function BottomNav() {
   const location = useLocation();
   const { cart } = useCartStore();
   
-  // Hide on pages where it interrupts the flow
-  if (["/checkout", "/success", "/cart", "/product"].some(path => location.pathname.includes(path))) {
+  // ✅ Removed "/cart" from here so the nav shows up on the cart page!
+  if (["/checkout", "/success", "/product"].some(path => location.pathname.includes(path))) {
     return null;
   }
 
@@ -20,7 +20,7 @@ export default function BottomNav() {
   ];
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[350px] z-50">
+    <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-[90%] max-w-[350px] z-50">
       <motion.div 
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -44,7 +44,6 @@ export default function BottomNav() {
                 {item.label}
               </span>
 
-              {/* Floating Badge for Cart */}
               {item.badge > 0 && (
                 <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white dark:border-slate-800 animate-pulse"></span>
               )}

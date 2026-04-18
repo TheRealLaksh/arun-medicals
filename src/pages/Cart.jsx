@@ -110,7 +110,8 @@ export default function Cart() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass border-t border-gray-200 dark:border-slate-800 p-4 flex gap-3 z-40 rounded-t-3xl pb-8 sm:pb-4 items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+      {/* ✅ Changed from fixed to sticky, and rounded all corners to float above the BottomNav */}
+      <div className="sticky bottom-2 mt-6 glass border border-gray-200 dark:border-slate-800 p-4 flex gap-3 z-40 rounded-3xl items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.1)]">
         <div>
           <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-0.5">Total Pay</p>
           <p className="font-extrabold text-xl leading-none text-primary">₹{total.toFixed(2)}</p>
