@@ -1,6 +1,10 @@
 export const categories = [
-  "Tablets & Capsules", "Syrups & Drops", "Health Supplements", 
-  "First Aid", "Ayurvedic", "Personal Care"
+  "Tablets & Capsules", 
+  "Syrups & Drops", 
+  "Health Supplements", 
+  "First Aid", 
+  "Ayurvedic", 
+  "Personal Care"
 ];
 
 export const medicines = [
@@ -95,4 +99,97 @@ export const medicines = [
   },
   {
     id: 13, name: "Multivitamin Men", price: 450, discount: 15, category: "Health Supplements",
-    images: ["https://placehold
+    images: ["https://placehold.co/400x400/png?text=Multivitamin"],
+    description: "Comprehensive daily multivitamin tailored for men's health.",
+    uses: "Daily nutrition, Energy", dosage: "1 tablet daily after breakfast", sideEffects: "None",
+    stock: 60, prescriptionRequired: false, tags: ["Popular"]
+  },
+  {
+    id: 14, name: "Calcium + D3 Tablets", price: 220, discount: 10, category: "Health Supplements",
+    images: ["https://placehold.co/400x400/png?text=Calcium+D3"],
+    description: "Supports bone and teeth health.",
+    uses: "Bone strength, Calcium deficiency", dosage: "1 tablet daily", sideEffects: "Constipation",
+    stock: 45, prescriptionRequired: false, tags: []
+  },
+  {
+    id: 15, name: "Whey Protein 1kg", price: 2500, discount: 30, category: "Health Supplements",
+    images: ["https://placehold.co/400x400/png?text=Whey+Protein"],
+    description: "High-quality protein powder for muscle recovery.",
+    uses: "Muscle building, Recovery", dosage: "1 scoop post-workout", sideEffects: "Bloating if lactose intolerant",
+    stock: 5, prescriptionRequired: false, tags: ["Limited Stock", "Premium"]
+  },
+
+  // First Aid
+  {
+    id: 16, name: "Povidone Iodine Ointment 20g", price: 90, discount: 0, category: "First Aid",
+    images: ["https://placehold.co/400x400/png?text=Iodine+Ointment"],
+    description: "Antiseptic ointment for minor cuts and wounds.",
+    uses: "Wounds, Cuts, Scrapes", dosage: "Apply thin layer locally", sideEffects: "Skin irritation",
+    stock: 120, prescriptionRequired: false, tags: ["Essential"]
+  },
+  {
+    id: 17, name: "Cotton Roll 100g", price: 50, discount: 5, category: "First Aid",
+    images: ["https://placehold.co/400x400/png?text=Cotton+Roll"],
+    description: "Sterilized absorbent cotton roll.",
+    uses: "Cleaning wounds", dosage: "As needed", sideEffects: "None",
+    stock: 200, prescriptionRequired: false, tags: []
+  },
+  {
+    id: 18, name: "Adhesive Bandages (Pack of 100)", price: 150, discount: 20, category: "First Aid",
+    images: ["https://placehold.co/400x400/png?text=Bandages"],
+    description: "Waterproof bandages for minor cuts.",
+    uses: "Minor cuts", dosage: "Apply on clean wound", sideEffects: "None",
+    stock: 50, prescriptionRequired: false, tags: ["Popular"]
+  },
+  {
+    id: 19, name: "Antiseptic Liquid 250ml", price: 130, discount: 10, category: "First Aid",
+    images: ["https://placehold.co/400x400/png?text=Antiseptic+Liquid"],
+    description: "Multipurpose antiseptic liquid for first aid and personal hygiene.",
+    uses: "Wound cleaning, Disinfection", dosage: "Dilute in water before use", sideEffects: "Skin irritation if undiluted",
+    stock: 80, prescriptionRequired: false, tags: ["Essential"]
+  },
+  {
+    id: 20, name: "Crepe Bandage 10cm", price: 180, discount: 0, category: "First Aid",
+    images: ["https://placehold.co/400x400/png?text=Crepe+Bandage"],
+    description: "Elastic bandage for sprains and strains.",
+    uses: "Sprains, Joint support", dosage: "Wrap firmly around affected area", sideEffects: "None",
+    stock: 40, prescriptionRequired: false, tags: []
+  },
+
+  // Ayurvedic
+  {
+    id: 21, name: "Ashwagandha Extract 60 Caps", price: 350, discount: 25, category: "Ayurvedic",
+    images: ["https://placehold.co/400x400/png?text=Ashwagandha"],
+    description: "Traditional herb for stress relief and vitality.",
+    uses: "Stress, Immunity, Energy", dosage: "1 capsule twice daily", sideEffects: "Mild stomach upset",
+    stock: 60, prescriptionRequired: false, tags: ["Popular"]
+  },
+  {
+    id: 22, name: "Chyawanprash 1kg", price: 320, discount: 15, category: "Ayurvedic",
+    images: ["https://placehold.co/400x400/png?text=Chyawanprash"],
+    description: "Ayurvedic immunity boosting blend.",
+    uses: "Immunity, General health", dosage: "1-2 teaspoons daily", sideEffects: "None",
+    stock: 80, prescriptionRequired: false, tags: ["Popular"]
+  },
+  {
+    id: 23, name: "Triphala Churna 100g", price: 95, discount: 5, category: "Ayurvedic",
+    images: ["https://placehold.co/400x400/png?text=Triphala"],
+    description: "Natural digestive and colon cleanser.",
+    uses: "Constipation, Digestion", dosage: "1 tsp with warm water at night", sideEffects: "Loose motions if overused",
+    stock: 45, prescriptionRequired: false, tags: []
+  },
+  {
+    id: 24, name: "Neem Capsules 60s", price: 200, discount: 10, category: "Ayurvedic",
+    images: ["https://placehold.co/400x400/png?text=Neem+Capsules"],
+    description: "Blood purifier and acne treatment.",
+    uses: "Skin health, Detox", dosage: "1 capsule daily", sideEffects: "None",
+    stock: 30, prescriptionRequired: false, tags: []
+  },
+  {
+    id: 25, name: "Brahmi Syrup 200ml", price: 160, discount: 15, category: "Ayurvedic",
+    images: ["https://placehold.co/400x400/png?text=Brahmi+Syrup"],
+    description: "Memory and cognitive enhancer.",
+    uses: "Memory, Focus", dosage: "1-2 tsp twice daily", sideEffects: "None",
+    stock: 20, prescriptionRequired: false, tags: []
+  }
+];
