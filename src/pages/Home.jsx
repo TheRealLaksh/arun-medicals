@@ -49,7 +49,8 @@ export default function Home() {
       {!searchQuery && (
         <div className="space-y-3">
           <h3 className="font-extrabold text-lg md:text-xl tracking-tight">Shop by Category</h3>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+          {/* ✅ CHANGED: Replaced no-scrollbar with custom-scrollbar and added pb-4 */}
+          <div className="flex gap-3 overflow-x-auto custom-scrollbar pb-4">
             {categories.map((cat, i) => (
               <Link key={i} to={`/category/${cat}`} className="glass px-5 py-3 rounded-xl whitespace-nowrap text-xs md:text-sm font-bold hover:bg-primary hover:text-white transition-all duration-300 shadow-sm border border-gray-100 dark:border-slate-700/50">
                 {cat}

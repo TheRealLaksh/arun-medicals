@@ -6,17 +6,16 @@
   :root {
     --bg-color: #f8fafc; 
     --text-color: #0f172a;
-    --primary: #2563eb; /* Richer royal blue */
+    --primary: #2563eb; 
   }
   
   .dark {
     --bg-color: #020617; 
     --text-color: #f8fafc;
-    --primary: #3b82f6; /* Brighter blue for dark mode */
+    --primary: #3b82f6; 
   }
 }
 
-/* The background OUTSIDE the mobile app (for desktop viewers) */
 body {
   background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
   color: var(--text-color);
@@ -28,20 +27,38 @@ body {
   background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
 }
 
-/* Premium Apple-style Glassmorphism */
 .glass {
   @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)];
 }
 
-/* Specific card style for products */
 .glass-card {
   @apply bg-white dark:bg-slate-800/90 backdrop-blur-md border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-3xl;
 }
 
+/* Hide scrollbar entirely */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;  
   scrollbar-width: none;  
+}
+
+/* ✅ NEW: Beautiful Custom Horizontal Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px; /* Super thin and modern */
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05); /* Very faint track */
+  border-radius: 10px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary); /* Uses your exact primary blue! */
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #1d4ed8; /* Darkens slightly on hover */
 }
