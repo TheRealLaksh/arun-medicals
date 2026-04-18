@@ -17,20 +17,29 @@ export default function Home() {
     <div className="space-y-8 pb-10 w-full">
       
       {/* Banner */}
-      <div className="bg-gradient-to-r from-primary to-blue-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="relative z-10">
-          <h2 className="text-2xl md:text-3xl font-extrabold mb-1">Arun Medicals</h2>
-          <p className="text-xs md:text-sm font-medium opacity-90 flex items-center gap-1">
-            <span className="bg-white/20 px-1.5 py-0.5 rounded text-white font-bold">4.4 ⭐</span> 
-            Sigra, Varanasi
-          </p>
-          {/* ✅ Changed to generic Fast Home Delivery */}
-          <p className="text-[10px] md:text-xs uppercase tracking-wider mt-4 font-bold bg-white/20 inline-block px-3 py-1.5 rounded-full">
-            🛵 Fast Home Delivery
-          </p>
+      <Link to="/store" className="block relative outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-3xl">
+        <div className="bg-gradient-to-r from-primary to-blue-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-transform duration-300 hover:scale-[1.02] cursor-pointer">
+          <div className="relative z-10">
+            <div className="flex justify-between items-start">
+              <h2 className="text-2xl md:text-3xl font-extrabold mb-1">Arun Medicals</h2>
+              {/* Click indicator */}
+              <div className="bg-white/20 p-1.5 rounded-full backdrop-blur-sm">
+                <span className="text-white text-xs font-bold px-1 flex items-center gap-1">ℹ️ Info</span>
+              </div>
+            </div>
+            
+            <p className="text-xs md:text-sm font-medium opacity-90 flex items-center gap-1 mt-1">
+              <span className="bg-white/20 px-1.5 py-0.5 rounded text-white font-bold">4.4 ⭐</span> 
+              Sigra, Varanasi
+            </p>
+            {/* ✅ Changed to generic Fast Home Delivery */}
+            <p className="text-[10px] md:text-xs uppercase tracking-wider mt-4 font-bold bg-white/20 inline-block px-3 py-1.5 rounded-full">
+              🛵 Fast Home Delivery
+            </p>
+          </div>
+          <div className="absolute -right-4 -bottom-4 opacity-20 text-[120px] leading-none">🏥</div>
         </div>
-        <div className="absolute -right-4 -bottom-4 opacity-20 text-[120px] leading-none">🏥</div>
-      </div>
+      </Link>
 
       {/* Floating Search Bar */}
       <div className="sticky top-0 z-30 pt-2 pb-4 bg-gradient-to-b from-[var(--bg-color)] via-[var(--bg-color)] to-transparent">
