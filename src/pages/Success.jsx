@@ -27,8 +27,9 @@ export default function Success() {
 
         <div className="glass p-5 rounded-2xl border border-gray-100 dark:border-slate-800 mb-8 inline-block text-left w-full max-w-xs shadow-sm">
           <p className="text-[10px] text-gray-400 uppercase font-extrabold tracking-wider mb-1">Estimated Arrival</p>
+          {/* ✅ Changed from 20-30 mins to generic text */}
           <p className="font-extrabold text-lg text-primary flex items-center gap-2">
-            <span>⏱️</span> Today, in 20-30 mins
+            <span>⏱️</span> Dispatched Shortly
           </p>
         </div>
       </motion.div>

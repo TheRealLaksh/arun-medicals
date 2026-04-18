@@ -20,7 +20,7 @@ export default function Navbar() {
       className="sticky top-0 z-50 w-full glass shadow-sm border-b border-white/40 dark:border-slate-800/80"
     >
       <div className="w-full max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Left: Location & Delivery Time */}
+        {/* Left: Location */}
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5">
             <span className="text-xl drop-shadow-sm">⚡</span>
@@ -28,10 +28,9 @@ export default function Navbar() {
               Arun Medicals
             </h1>
           </div>
+          {/* ✅ Removed 20 min delivery text here */}
           <p className="text-[11px] font-bold text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-1">
             <span className="text-primary truncate max-w-[120px]">Sigra, Varanasi</span> 
-            <span className="text-gray-300 dark:text-slate-600 hidden sm:inline">|</span> 
-            <span className="hidden sm:inline">20 min delivery</span>
           </p>
         </div>
         

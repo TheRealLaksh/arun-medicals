@@ -7,9 +7,9 @@ export default function ThemeToggle() {
       if (savedTheme) {
         return savedTheme === 'dark';
       }
-      return true; // Force dark mode as default
+      return false; // ✅ Changed to false to force Light mode as default
     }
-    return true; 
+    return false; 
   });
 
   useEffect(() => {

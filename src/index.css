@@ -44,21 +44,38 @@ body {
   scrollbar-width: none;  
 }
 
-/* ✅ NEW: Beautiful Custom Horizontal Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  height: 6px; /* Super thin and modern */
+.custom-scrollbar {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) rgba(0, 0, 0, 0.05);
 }
+
+.dark .custom-scrollbar {
+  scrollbar-color: var(--primary) rgba(255, 255, 255, 0.05);
+}
+
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  -webkit-appearance: none; /* Forces Safari/Mobile to respect the custom style */
+}
+
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05); /* Very faint track */
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 10px;
 }
+
 .dark .custom-scrollbar::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--primary); /* Uses your exact primary blue! */
+  background-color: var(--primary);
   border-radius: 10px;
+  border: 1px solid transparent; /* Gives a slight padding effect */
+  background-clip: padding-box;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #1d4ed8; /* Darkens slightly on hover */
+  background-color: #1d4ed8;
 }

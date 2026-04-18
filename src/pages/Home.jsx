@@ -24,8 +24,9 @@ export default function Home() {
             <span className="bg-white/20 px-1.5 py-0.5 rounded text-white font-bold">4.4 ⭐</span> 
             Sigra, Varanasi
           </p>
+          {/* ✅ Changed to generic Fast Home Delivery */}
           <p className="text-[10px] md:text-xs uppercase tracking-wider mt-4 font-bold bg-white/20 inline-block px-3 py-1.5 rounded-full">
-            🛵 Fast 20 min delivery
+            🛵 Fast Home Delivery
           </p>
         </div>
         <div className="absolute -right-4 -bottom-4 opacity-20 text-[120px] leading-none">🏥</div>
@@ -49,7 +50,6 @@ export default function Home() {
       {!searchQuery && (
         <div className="space-y-3">
           <h3 className="font-extrabold text-lg md:text-xl tracking-tight">Shop by Category</h3>
-          {/* ✅ CHANGED: Replaced no-scrollbar with custom-scrollbar and added pb-4 */}
           <div className="flex gap-3 overflow-x-auto custom-scrollbar pb-4">
             {categories.map((cat, i) => (
               <Link key={i} to={`/category/${cat}`} className="glass px-5 py-3 rounded-xl whitespace-nowrap text-xs md:text-sm font-bold hover:bg-primary hover:text-white transition-all duration-300 shadow-sm border border-gray-100 dark:border-slate-700/50">
@@ -71,7 +71,6 @@ export default function Home() {
             <p>No medicines found.</p>
           </div>
         ) : (
-          /* RESPONSIVE GRID: 2 cols on mobile, 3 on tablets, 4 on desktop */
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
             {filteredMedicines.slice(0, 12).map((item, i) => (
               <motion.div
