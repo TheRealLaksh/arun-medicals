@@ -17,9 +17,11 @@ export default function Home() {
     <div className="space-y-8 pb-10 w-full">
       
       {/* Banner */}
-      <Link to="/store" className="block relative outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-3xl">
-        <div className="bg-gradient-to-r from-primary to-blue-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-transform duration-300 hover:scale-[1.02] cursor-pointer">
-          <div className="relative z-10">
+      <Link to="/store" className="block relative outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-3xl group">
+        <div className="bg-gradient-to-r from-primary to-blue-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden transition-all duration-300 group-hover:scale-[1.02] cursor-pointer">
+          
+          {/* Main Content (Blurs and fades slightly on hover) */}
+          <div className="relative z-10 transition-all duration-300 group-hover:blur-sm group-hover:opacity-60 group-hover:scale-[0.98]">
             <div className="flex justify-between items-start">
               <h2 className="text-2xl md:text-3xl font-extrabold mb-1">Arun Medicals</h2>
               {/* Click indicator */}
@@ -37,7 +39,17 @@ export default function Home() {
               🛵 Fast Home Delivery
             </p>
           </div>
-          <div className="absolute -right-4 -bottom-4 opacity-20 text-[120px] leading-none">🏥</div>
+          
+          {/* Background Icon (Scales up on hover) */}
+          <div className="absolute -right-4 -bottom-4 opacity-20 text-[120px] leading-none transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">🏥</div>
+
+          {/* Hover Overlay Animation: "View Store Info" */}
+          <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+            <div className="bg-black/30 backdrop-blur-md border border-white/20 text-white font-extrabold px-6 py-3 rounded-full flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-2xl">
+              <span className="text-lg">ℹ️</span> View Store Info <span className="text-lg leading-none ml-1">→</span>
+            </div>
+          </div>
+
         </div>
       </Link>
 
