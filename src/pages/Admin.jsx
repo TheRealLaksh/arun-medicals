@@ -2,82 +2,104 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useOrderStore } from "../store/useOrderStore";
 
-// Sample Data
-const sampleOrders = [
-  {
-    id: "ORD-001",
-    date: "19 Apr 2026, 10:30 AM",
-    customer: {
-      name: "Rahul Sharma",
-      phone: "+91 9876543210",
-      email: "rahul.s@example.com",
-      address: "B-12, Lanka, Near BHU Gate, Varanasi, UP 221005"
-    },
-    items: [
-      { name: "Paracetamol 500mg", qty: 2, price: 30 },
-      { name: "Vitamin C Tablets", qty: 1, price: 120 }
-    ],
-    total: 180,
-    status: "Pending"
-  },
-  {
-    id: "ORD-002",
-    date: "19 Apr 2026, 11:15 AM",
-    customer: {
-      name: "Priya Singh",
-      phone: "+91 8765432109",
-      email: "", 
-      address: "Flat 402, Shivam Apartments, Sigra, Varanasi, UP 221010"
-    },
-    items: [
-      { name: "Cough Syrup 100ml", qty: 1, price: 85 },
-      { name: "Vicks Vaporub 50g", qty: 1, price: 150 }
-    ],
-    total: 235,
-    status: "Processing"
-  },
-  {
-    id: "ORD-003",
-    date: "18 Apr 2026, 05:45 PM",
-    customer: {
-      name: "Amit Patel",
-      phone: "+91 7654321098",
-      email: "amit.p99@gmail.com",
-      address: "House 15, Assi Ghat Road, Varanasi, UP 221005"
-    },
-    items: [
-      { name: "Dolo 650", qty: 3, price: 35 },
-      { name: "Volini Gel 30g", qty: 1, price: 110 },
-      { name: "Band-Aid Pack", qty: 1, price: 50 }
-    ],
-    total: 265,
-    status: "Delivered"
-  }
-];
-
 export default function Admin() {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
-  const { orderStatus, setOrderStatus } = useOrderStore(); 
+  const { orders, updateOrderStatus } = useOrderStore(); 
 
   const toggleOrder = (id) => setExpandedOrderId(expandedOrderId === id ? null : id);
   const steps = ["Ordered", "Packed", "Dispatched", "Delivered"];
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "Pending": return "bg-rose-100 text-rose-600 border-rose-200 dark:bg-rose-500/20 dark:text-rose-400 dark:border-rose-500/30";
-      case "Processing": return "bg-blue-100 text-blue-600 border-blue-200 dark:bg-blue-500/20 dark:text-blue-400 dark:border-blue-500/30";
+      case "Ordered": return "bg-rose-100 text-rose-600 border-rose-200 dark:bg-rose-500/20 dark:text-rose-400 dark:border-rose-500/30";
+      case "Packed": return "bg-amber-100 text-amber-600 border-amber-200 dark:bg-amber-500/20 dark:text-amber-400 dark:border-amber-500/30";
+      case "Dispatched": return "bg-blue-100 text-blue-600 border-blue-200 dark:bg-blue-500/20 dark:text-blue-400 dark:border-blue-500/30";
       case "Delivered": return "bg-emerald-100 text-emerald-600 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30";
       default: return "bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700";
     }
   };
 
-  // Dynamic Analytics calculations based on sample data
-  const totalSales = sampleOrders.reduce((sum, order) => sum + order.total, 0);
-  const pendingDeliveries = sampleOrders.filter(o => o.status !== "Delivered").length;
+  const totalSales = orders.reduce((sum, order) => sum + order.total, 0);
+  const pendingDeliveries = orders.filter(o => o.status !== "Delivered").length;
 
-  // Mock function for printing invoice
-  const handleGenerateInvoice = (orderId) => {
-    alert(`Generating GST-compliant PDF Invoice for ${orderId}... \n(In production, this downloads a PDF)`);
+  // ACTUAL PRINTABLE INVOICE GENERATOR
+  const handleGenerateInvoice = (order) => {
+    const printWindow = window.open('', '_blank');
+    const htmlContent = `
+      <html>
+        <head>
+          <title>Invoice - ${order.id}</title>
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto; }
+            .header { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
+            .store-name { font-size: 28px; font-weight: bold; color: #2563eb; margin-bottom: 5px; }
+            .meta { color: #666; font-size: 14px; }
+            .row { display: flex; justify-content: space-between; margin-bottom: 30px; }
+            .box { background: #f8fafc; padding: 15px; border-radius: 8px; width: 45%; border: 1px solid #e2e8f0; }
+            .table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+            .table th, .table td { border-bottom: 1px solid #e2e8f0; padding: 12px; text-align: left; }
+            .table th { background-color: #f1f5f9; font-weight: bold; }
+            .total-row { font-size: 20px; font-weight: bold; text-align: right; margin-top: 20px; }
+            .footer { text-align: center; margin-top: 50px; font-size: 14px; color: #94a3b8; border-top: 1px solid #eee; padding-top: 20px; }
+            @media print { body { padding: 0; } .print-btn { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="store-name">Arun Medicals</div>
+            <div class="meta">GSTIN: 09AAACA1234A1Z5 | Phone: +91 9988776655</div>
+            <div class="meta">Lanka Road, Varanasi, UP 221005</div>
+            <h2 style="margin-top:20px; color:#1e293b;">TAX INVOICE</h2>
+          </div>
+          <div class="row">
+            <div class="box">
+              <p style="margin:0 0 10px 0; font-size:12px; color:#64748b; font-weight:bold;">BILLED TO:</p>
+              <p style="margin:0 0 5px 0; font-weight:bold;">${order.customer.name}</p>
+              <p style="margin:0 0 5px 0; font-size:14px;">${order.customer.phone}</p>
+              <p style="margin:0; font-size:14px; line-height:1.4;">${order.customer.address}</p>
+            </div>
+            <div class="box">
+              <p style="margin:0 0 10px 0; font-size:12px; color:#64748b; font-weight:bold;">ORDER DETAILS:</p>
+              <p style="margin:0 0 5px 0; font-size:14px;"><strong>Invoice No:</strong> ${order.id}</p>
+              <p style="margin:0 0 5px 0; font-size:14px;"><strong>Date:</strong> ${order.date}</p>
+              <p style="margin:0; font-size:14px;"><strong>Payment Mode:</strong> Cash on Delivery</p>
+            </div>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Item Description</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.items.map(item => `
+                <tr>
+                  <td>${item.name}</td>
+                  <td>${item.qty}</td>
+                  <td>₹${item.price.toFixed(2)}</td>
+                  <td>₹${(item.price * item.qty).toFixed(2)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="total-row">
+            Grand Total: <span style="color:#2563eb;">₹${order.total.toFixed(2)}</span>
+          </div>
+          <div class="footer">
+            <p>Thank you for shopping with Arun Medicals. Get well soon!</p>
+            <p>This is a computer-generated invoice and does not require a physical signature.</p>
+          </div>
+          <script>
+            window.onload = function() { window.print(); }
+          </script>
+        </body>
+      </html>
+    `;
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
   };
 
   return (
@@ -90,55 +112,30 @@ export default function Admin() {
         </div>
       </div>
 
-      {/* 1. ANALYTICS SUMMARY (New Feature) */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center">
-          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Today's Sales</p>
+      {/* ANALYTICS SUMMARY */}
+      <div className="grid grid-cols-3 gap-3 mb-8">
+        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center shadow-sm">
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Total Sales</p>
           <p className="text-xl font-extrabold text-primary">₹{totalSales}</p>
         </div>
-        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center">
+        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center shadow-sm">
           <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Pending</p>
           <p className="text-xl font-extrabold text-rose-500">{pendingDeliveries} Orders</p>
         </div>
-        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center">
+        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center shadow-sm">
           <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Top Item</p>
-          <p className="text-sm font-extrabold text-gray-800 dark:text-gray-200 truncate">Dolo 650</p>
+          <p className="text-sm font-extrabold text-gray-800 dark:text-gray-200 truncate">Paracetamol</p>
         </div>
-      </div>
-
-      {/* LIVE TRACKING CONTROLLER */}
-      <div className="glass p-5 rounded-2xl border border-primary/20 bg-primary/5 mb-8 shadow-inner">
-        <h3 className="font-bold mb-4 flex items-center gap-2 text-primary text-sm uppercase tracking-wider">
-          ⚡ Live Tracking Controller
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {steps.map(s => (
-            <button
-              key={s}
-              onClick={() => setOrderStatus(s)}
-              className={`flex-1 min-w-[80px] py-2.5 rounded-xl font-bold text-[11px] uppercase transition-all duration-300 border ${
-                orderStatus === s 
-                ? "bg-primary text-white border-primary shadow-md scale-105" 
-                : "bg-white dark:bg-slate-800 border-gray-200 text-gray-400"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-        <p className="text-[10px] text-primary/60 mt-3 font-bold text-center italic">
-          Clicking these updates the customer's phone status in real-time
-        </p>
       </div>
 
       {/* Orders List */}
       <div className="space-y-4">
           <div className="flex justify-between items-end px-1">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Recent Orders</p>
-            <p className="text-xs font-bold text-primary">{sampleOrders.length} Total</p>
+            <p className="text-xs font-bold text-primary">{orders.length} Total</p>
           </div>
           
-        {sampleOrders.map((order, i) => (
+        {orders.map((order, i) => (
           <motion.div 
             key={order.id}
             initial={{ opacity: 0, y: 10 }}
@@ -179,7 +176,32 @@ export default function Admin() {
                   className="border-t border-gray-100 dark:border-slate-700/50 bg-gray-50/30 dark:bg-slate-800/20"
                 >
                   <div className="p-4 space-y-5">
-                    {/* Contact & Address Details */}
+                    
+                    {/* NEW: PER-ORDER LIVE TRACKING CONTROLLER */}
+                    <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
+                      <p className="text-[10px] uppercase font-bold text-primary tracking-wider mb-2 flex items-center gap-2">
+                        ⚡ Update Customer Live Status
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {steps.map(s => (
+                          <button
+                            key={s}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateOrderStatus(order.id, s);
+                            }}
+                            className={`flex-1 py-2 rounded-lg font-bold text-[10px] uppercase transition-all duration-300 border ${
+                              order.status === s 
+                              ? "bg-primary text-white border-primary shadow-md" 
+                              : "bg-gray-50 dark:bg-slate-700/50 border-gray-200 dark:border-slate-600 text-gray-500 hover:bg-gray-100"
+                            }`}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1">Contact Details</p>
@@ -202,15 +224,11 @@ export default function Admin() {
                       </div>
                     </div>
 
-                    {/* Order Items Table */}
                     <div>
                       <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-2">Medicines Ordered</p>
                       <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden">
                         {order.items.map((item, index) => (
-                          <div 
-                            key={index} 
-                            className="flex justify-between items-center p-3 text-sm border-b last:border-b-0 border-gray-100 dark:border-slate-700"
-                          >
+                          <div key={index} className="flex justify-between items-center p-3 text-sm border-b last:border-b-0 border-gray-100 dark:border-slate-700">
                             <div className="flex items-center gap-3">
                               <span className="bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 w-6 h-6 rounded flex items-center justify-center font-bold text-xs">
                                 {item.qty}x
@@ -227,22 +245,12 @@ export default function Admin() {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex flex-wrap gap-2 pt-2">
-                      <button className="flex-1 min-w-[120px] bg-primary text-white py-2.5 rounded-xl font-bold text-sm hover:bg-blue-600 transition-colors">
-                        Mark Delivered
-                      </button>
-                      
-                      {/* 2. GENERATE INVOICE BUTTON (New Feature) */}
                       <button 
-                        onClick={() => handleGenerateInvoice(order.id)}
+                        onClick={() => handleGenerateInvoice(order)}
                         className="flex-1 min-w-[120px] bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors flex items-center justify-center gap-2"
                       >
                         📄 Print Invoice
-                      </button>
-
-                      <button className="flex-1 min-w-[120px] bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 py-2.5 rounded-xl font-bold text-sm hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors">
-                        Cancel Order
                       </button>
                     </div>
                   </div>

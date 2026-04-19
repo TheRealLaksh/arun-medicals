@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { categories, medicines } from "../data/medicines";
 import { useCartStore } from "../store/useCartStore";
 import { useUIStore } from "../store/useUIStore";
+import PrescriptionBanner from "../components/ui/PrescriptionBanner"; // <-- IMPORTED HERE
 
 export default function Home() {
   const { searchQuery, setSearchQuery } = useUIStore();
@@ -30,8 +31,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Banner */}
-      <Link to="/store" className="block relative outline-none rounded-2xl group">
+      {/* Main Store Banner */}
+      <Link to="/store" className="block relative outline-none rounded-2xl group mx-1">
         <div className="bg-gradient-to-r from-blue-600 to-primary rounded-2xl p-5 text-white shadow-md relative overflow-hidden transition-all duration-300">
           <div className="relative z-10 flex flex-col justify-center h-full">
             <div className="flex justify-between items-start">
@@ -55,6 +56,13 @@ export default function Home() {
           <div className="absolute -right-2 -bottom-6 opacity-20 text-[100px] leading-none mix-blend-overlay">🏥</div>
         </div>
       </Link>
+
+      {/* 🚀 THE PRESCRIPTION UPLOAD FEATURE - Placed here for max visibility */}
+      {!searchQuery && (
+        <div className="-mx-4 md:mx-0">
+          <PrescriptionBanner />
+        </div>
+      )}
 
       {/* Instamart Style Grid Categories */}
       {!searchQuery && (
