@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useOrderStore } from "../store/useOrderStore";
 
 // Sample Data
 const sampleOrders = [
@@ -25,7 +26,7 @@ const sampleOrders = [
     customer: {
       name: "Priya Singh",
       phone: "+91 8765432109",
-      email: "", // No email provided
+      email: "", 
       address: "Flat 402, Shivam Apartments, Sigra, Varanasi, UP 221010"
     },
     items: [
@@ -56,10 +57,10 @@ const sampleOrders = [
 
 export default function Admin() {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const { orderStatus, setOrderStatus } = useOrderStore(); 
 
-  const toggleOrder = (id) => {
-    setExpandedOrderId(expandedOrderId === id ? null : id);
-  };
+  const toggleOrder = (id) => setExpandedOrderId(expandedOrderId === id ? null : id);
+  const steps = ["Ordered", "Packed", "Dispatched", "Delivered"];
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -70,25 +71,73 @@ export default function Admin() {
     }
   };
 
+  // Dynamic Analytics calculations based on sample data
+  const totalSales = sampleOrders.reduce((sum, order) => sum + order.total, 0);
+  const pendingDeliveries = sampleOrders.filter(o => o.status !== "Delivered").length;
+
+  // Mock function for printing invoice
+  const handleGenerateInvoice = (orderId) => {
+    alert(`Generating GST-compliant PDF Invoice for ${orderId}... \n(In production, this downloads a PDF)`);
+  };
+
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }} 
-      animate={{ opacity: 1, y: 0 }}
-      className="pb-10 w-full"
-    >
-      <div className="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-slate-800 mb-6 sticky top-0 bg-[var(--bg-color)] z-20 pt-2">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pb-10 w-full">
+      {/* Page Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-slate-800 mb-6 pt-2">
         <div>
-          <h2 className="text-2xl font-extrabold flex items-center gap-2">
-            👨‍💻 Admin Dashboard
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">Manage all recent orders</p>
-        </div>
-        <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-lg font-bold text-sm">
-          {sampleOrders.length} Orders
+          <h2 className="text-2xl font-extrabold">👨‍💻 Admin Dashboard</h2>
+          <p className="text-sm text-gray-500 font-medium">Store Operations</p>
         </div>
       </div>
 
+      {/* 1. ANALYTICS SUMMARY (New Feature) */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center">
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Today's Sales</p>
+          <p className="text-xl font-extrabold text-primary">₹{totalSales}</p>
+        </div>
+        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center">
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Pending</p>
+          <p className="text-xl font-extrabold text-rose-500">{pendingDeliveries} Orders</p>
+        </div>
+        <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800 flex flex-col justify-center">
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Top Item</p>
+          <p className="text-sm font-extrabold text-gray-800 dark:text-gray-200 truncate">Dolo 650</p>
+        </div>
+      </div>
+
+      {/* LIVE TRACKING CONTROLLER */}
+      <div className="glass p-5 rounded-2xl border border-primary/20 bg-primary/5 mb-8 shadow-inner">
+        <h3 className="font-bold mb-4 flex items-center gap-2 text-primary text-sm uppercase tracking-wider">
+          ⚡ Live Tracking Controller
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {steps.map(s => (
+            <button
+              key={s}
+              onClick={() => setOrderStatus(s)}
+              className={`flex-1 min-w-[80px] py-2.5 rounded-xl font-bold text-[11px] uppercase transition-all duration-300 border ${
+                orderStatus === s 
+                ? "bg-primary text-white border-primary shadow-md scale-105" 
+                : "bg-white dark:bg-slate-800 border-gray-200 text-gray-400"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+        <p className="text-[10px] text-primary/60 mt-3 font-bold text-center italic">
+          Clicking these updates the customer's phone status in real-time
+        </p>
+      </div>
+
+      {/* Orders List */}
       <div className="space-y-4">
+          <div className="flex justify-between items-end px-1">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Recent Orders</p>
+            <p className="text-xs font-bold text-primary">{sampleOrders.length} Total</p>
+          </div>
+          
         {sampleOrders.map((order, i) => (
           <motion.div 
             key={order.id}
@@ -97,7 +146,7 @@ export default function Admin() {
             transition={{ delay: i * 0.1 }}
             className="glass rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden"
           >
-            {/* Minimal Summary Banner (Always Visible) */}
+            {/* Minimal Summary Banner */}
             <div 
               onClick={() => toggleOrder(order.id)}
               className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors"
@@ -179,11 +228,20 @@ export default function Admin() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-2 pt-2">
-                      <button className="flex-1 bg-primary text-white py-2.5 rounded-xl font-bold text-sm hover:bg-blue-600 transition-colors">
-                        Mark as Delivered
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      <button className="flex-1 min-w-[120px] bg-primary text-white py-2.5 rounded-xl font-bold text-sm hover:bg-blue-600 transition-colors">
+                        Mark Delivered
                       </button>
-                      <button className="flex-1 bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400 py-2.5 rounded-xl font-bold text-sm hover:bg-rose-200 dark:hover:bg-rose-500/30 transition-colors">
+                      
+                      {/* 2. GENERATE INVOICE BUTTON (New Feature) */}
+                      <button 
+                        onClick={() => handleGenerateInvoice(order.id)}
+                        className="flex-1 min-w-[120px] bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors flex items-center justify-center gap-2"
+                      >
+                        📄 Print Invoice
+                      </button>
+
+                      <button className="flex-1 min-w-[120px] bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 py-2.5 rounded-xl font-bold text-sm hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors">
                         Cancel Order
                       </button>
                     </div>
