@@ -1,12 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useCartStore } from "../../store/useCartStore";
 
 export default function BottomNav() {
   const location = useLocation();
   const { cart } = useCartStore();
   
-  // Hide on pages where it interrupts the flow, OR on larger desktop screens
   if (["/checkout", "/success", "/product"].some(path => location.pathname.includes(path))) {
     return null;
   }
@@ -20,13 +18,9 @@ export default function BottomNav() {
   ];
 
   return (
-    // Only visible on small and medium screens. Desktop users use Navbar.
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50 md:hidden">
-      <motion.div 
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="glass rounded-3xl p-2 px-4 flex justify-between items-center shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-white/50 dark:border-slate-700/50"
-      >
+    // Fixed full-width bottom bar (positioned just above the 28px disclaimer block)
+    <div className="fixed bottom-[28px] left-0 w-full bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 z-50 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+      <div className="flex justify-around items-center h-16 px-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path || (item.path !== "/" && location.pathname.includes(item.path.split('/')[1]));
           
@@ -34,24 +28,27 @@ export default function BottomNav() {
             <Link 
               key={item.label} 
               to={item.path}
-              className={`relative flex flex-col items-center justify-center w-16 h-12 rounded-2xl transition-all duration-300 ${
-                isActive ? "bg-primary/10 text-primary dark:bg-slate-800 dark:text-white" : "text-gray-500 hover:text-gray-900 dark:hover:text-gray-300"
+              className={`relative flex flex-col items-center justify-center w-full h-full transition-colors ${
+                isActive ? "text-primary" : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               }`}
             >
-              <span className={`text-xl mb-0.5 transition-transform duration-300 ${isActive ? "scale-110 drop-shadow-sm" : "scale-100 grayscale opacity-70"}`}>
-                {item.icon}
-              </span>
-              <span className={`text-[9px] font-bold ${isActive ? "opacity-100" : "opacity-0 absolute -bottom-2"}`}>
+              <div className="relative">
+                <span className={`text-2xl block mb-1 transition-transform ${isActive ? "scale-110 drop-shadow-sm" : "grayscale opacity-80"}`}>
+                  {item.icon}
+                </span>
+                {item.badge > 0 && (
+                  <span className="absolute -top-1 -right-2 w-4 h-4 bg-rose-500 text-white text-[9px] font-extrabold flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900">
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+              <span className={`text-[10px] font-bold ${isActive ? "opacity-100" : "opacity-80"}`}>
                 {item.label}
               </span>
-
-              {item.badge > 0 && (
-                <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border border-[var(--bg-color)] animate-pulse"></span>
-              )}
             </Link>
           );
         })}
-      </motion.div>
+      </div>
     </div>
   );
 }
