@@ -45,10 +45,10 @@ export default function Navbar() {
             📞
           </a>
 
-          {/* Cart Icon */}
+          {/* Cart Icon - NOW HIDDEN ON MOBILE (hidden md:flex) */}
           <Link 
             to="/cart" 
-            className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-primary/10 dark:bg-slate-800 text-primary dark:text-white transition-all hover:scale-105 flex-shrink-0"
+            className="relative hidden md:flex w-10 h-10 items-center justify-center rounded-xl bg-primary/10 dark:bg-slate-800 text-primary dark:text-white transition-all hover:scale-105 flex-shrink-0"
           >
             <span className="text-lg">🛒</span>
             {totalItems > 0 && (
