@@ -13,7 +13,7 @@ export default function BottomNav() {
 
   const navItems = [
     { icon: "🏠", label: "Home", path: "/" },
-    { icon: "💊", label: "Categories", path: "/category/Tablets & Capsules" },
+    { icon: "💊", label: "Categories", path: "/categories" },
     { icon: "🛒", label: "Cart", path: "/cart", badge: totalItems },
   ];
 
