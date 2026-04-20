@@ -1,6 +1,5 @@
 import { create } from "zustand";
 
-// Expanded sample data with consistent tracking statuses
 const initialOrders = [
   {
     id: "ORD-001",
@@ -8,7 +7,7 @@ const initialOrders = [
     customer: { name: "Rahul Sharma", phone: "+91 9876543210", email: "rahul.s@example.com", address: "B-12, Lanka, Near BHU Gate, Varanasi, UP 221005" },
     items: [{ name: "Paracetamol 500mg", qty: 2, price: 30 }, { name: "Vitamin C Tablets", qty: 1, price: 120 }],
     total: 180,
-    status: "Ordered" // "Ordered" | "Packed" | "Dispatched" | "Delivered"
+    status: "Ordered"
   },
   {
     id: "ORD-002",
@@ -46,18 +45,15 @@ const initialOrders = [
 
 export const useOrderStore = create((set) => ({
   orders: initialOrders,
-  activeOrderId: null, // Tracks if an order is currently active
+  activeOrderId: null, // Required to stop the crash
 
-  // Function to update a specific order's status
   updateOrderStatus: (id, newStatus) => set((state) => ({
     orders: state.orders.map(order => 
       order.id === id ? { ...order, status: newStatus } : order
     )
   })),
 
-  // Sets an order as currently active (triggers the floating tracker)
+  // These functions are required by the Success page
   setActiveOrderId: (id) => set({ activeOrderId: id }),
-  
-  // Clears the active order
   clearActiveOrder: () => set({ activeOrderId: null }),
 }));
