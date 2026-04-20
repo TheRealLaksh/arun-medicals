@@ -4,11 +4,12 @@ import Navbar from "./components/layout/Navbar";
 import BottomNav from "./components/layout/BottomNav";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
-import Categories from "./pages/Categories"; // <-- ADD THIS IMPORT
+import Categories from "./pages/Categories"; 
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Success from "./pages/Success";
+import TrackOrder from "./pages/TrackOrder";
 import StoreInfo from "./pages/StoreInfo";
 import Admin from "./pages/Admin";
 

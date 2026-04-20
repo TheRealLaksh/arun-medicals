@@ -46,10 +46,18 @@ const initialOrders = [
 
 export const useOrderStore = create((set) => ({
   orders: initialOrders,
+  activeOrderId: null, // Tracks if an order is currently active
+
   // Function to update a specific order's status
   updateOrderStatus: (id, newStatus) => set((state) => ({
     orders: state.orders.map(order => 
       order.id === id ? { ...order, status: newStatus } : order
     )
   })),
+
+  // Sets an order as currently active (triggers the floating tracker)
+  setActiveOrderId: (id) => set({ activeOrderId: id }),
+  
+  // Clears the active order
+  clearActiveOrder: () => set({ activeOrderId: null }),
 }));
