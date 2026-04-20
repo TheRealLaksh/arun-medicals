@@ -37,7 +37,7 @@ export default function Checkout() {
       animate={{ opacity: 1, x: 0 }}
       className="pb-28 space-y-5"
     >
-      <div className="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-slate-800 sticky top-0 bg-[var(--bg-color)] z-20 pt-4 -mx-4 px-4">
+      <div className="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-slate-800 sticky top-[68px] bg-[var(--bg-color)] z-20 pt-4 -mx-4 px-4">
         <button 
           onClick={() => navigate(-1)} 
           className="w-8 h-8 flex items-center justify-center glass rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors"

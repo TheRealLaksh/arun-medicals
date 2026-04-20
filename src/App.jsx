@@ -17,7 +17,7 @@ export default function App() {
     <div className="min-h-screen font-sans bg-[var(--bg-color)] text-[var(--text-color)] flex flex-col relative">
       <Navbar />
 
-      <main className="w-full max-w-4xl mx-auto px-4 pt-4 pb-32 flex-1 flex flex-col relative">
+      <main className="w-full max-w-4xl mx-auto px-4 pt-24 pb-32 flex-1 flex flex-col relative">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/categories" element={<Categories />} /> {/* <-- ADD THIS ROUTE */}
