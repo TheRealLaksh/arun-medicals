@@ -3,11 +3,16 @@ import { Link } from "react-router-dom";
 import { categories, medicines } from "../data/medicines";
 import { useCartStore } from "../store/useCartStore";
 import { useUIStore } from "../store/useUIStore";
-import PrescriptionBanner from "../components/ui/PrescriptionBanner"; // <-- IMPORTED HERE
+import PrescriptionBanner from "../components/ui/PrescriptionBanner";
 
 export default function Home() {
   const { searchQuery, setSearchQuery } = useUIStore();
-  const addToCart = useCartStore(state => state.addToCart);
+  const { cart, addToCart, updateQuantity } = useCartStore();
+
+  const getItemQuantity = (id) => {
+    const item = cart.find(i => i.id === id);
+    return item ? item.quantity : 0;
+  };
 
   const filteredMedicines = medicines.filter(m => 
     m.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -134,13 +139,38 @@ export default function Home() {
                     {item.discount > 0 && <p className="text-[10px] line-through text-gray-400 font-medium">₹{item.price}</p>}
                   </div>
                   
-                  <motion.button 
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => addToCart(item)}
-                    className="border border-primary text-primary bg-primary/5 hover:bg-primary hover:text-white transition-colors px-4 py-1.5 rounded-lg font-extrabold text-xs shadow-sm"
-                  >
-                    ADD
-                  </motion.button>
+                  {/* DYNAMIC ADD / QUANTITY BUTTON */}
+                  {(() => {
+                    const quantity = getItemQuantity(item.id);
+                    if (quantity === 0) {
+                      return (
+                        <motion.button 
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => addToCart(item)}
+                          className="border border-primary text-primary bg-primary/5 hover:bg-primary hover:text-white transition-colors px-4 py-1.5 rounded-lg font-extrabold text-xs shadow-sm"
+                        >
+                          ADD
+                        </motion.button>
+                      );
+                    }
+                    return (
+                      <div className="flex items-center gap-1 bg-primary text-white rounded-lg px-1 py-1 shadow-sm h-[30px]">
+                        <button 
+                          onClick={() => updateQuantity(item.id, quantity - 1)}
+                          className="w-6 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
+                        >
+                          -
+                        </button>
+                        <span className="text-xs font-extrabold w-4 text-center">{quantity}</span>
+                        <button 
+                          onClick={() => updateQuantity(item.id, quantity + 1)}
+                          className="w-6 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
+                        >
+                          +
+                        </button>
+                      </div>
+                    );
+                  })()}
                 </div>
               </motion.div>
             ))}

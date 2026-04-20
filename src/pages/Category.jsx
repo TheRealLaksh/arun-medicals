@@ -6,7 +6,12 @@ import { useCartStore } from "../store/useCartStore";
 export default function Category() {
   const { categoryName } = useParams();
   const navigate = useNavigate();
-  const addToCart = useCartStore((state) => state.addToCart);
+  const { cart, addToCart, updateQuantity } = useCartStore();
+
+  const getItemQuantity = (id) => {
+    const item = cart.find(i => i.id === id);
+    return item ? item.quantity : 0;
+  };
 
   const categoryMedicines = medicines.filter(
     (m) => m.category.toLowerCase() === decodeURIComponent(categoryName).toLowerCase()
@@ -62,12 +67,38 @@ export default function Category() {
                   <p className="font-extrabold text-sm text-primary">₹{(item.price - (item.price * item.discount / 100)).toFixed(2)}</p>
                   {item.discount > 0 && <p className="text-[9px] line-through text-gray-400">₹{item.price}</p>}
                 </div>
-                <button 
-                  onClick={() => addToCart(item)}
-                  className="bg-primary/10 dark:bg-slate-700/80 text-primary dark:text-white hover:bg-primary hover:text-white transition-colors h-8 w-8 rounded-lg flex items-center justify-center font-bold text-lg"
-                >
-                  +
-                </button>
+                
+                {/* DYNAMIC ADD / QUANTITY BUTTON */}
+                {(() => {
+                  const quantity = getItemQuantity(item.id);
+                  if (quantity === 0) {
+                    return (
+                      <button 
+                        onClick={() => addToCart(item)}
+                        className="bg-primary/10 dark:bg-slate-700/80 text-primary dark:text-white hover:bg-primary hover:text-white transition-colors h-8 w-8 rounded-lg flex items-center justify-center font-bold text-lg"
+                      >
+                        +
+                      </button>
+                    );
+                  }
+                  return (
+                    <div className="flex items-center gap-0.5 bg-primary text-white rounded-lg h-8 px-1 shadow-sm">
+                      <button 
+                        onClick={() => updateQuantity(item.id, quantity - 1)}
+                        className="w-5 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
+                      >
+                        -
+                      </button>
+                      <span className="text-[10px] font-extrabold w-3 text-center">{quantity}</span>
+                      <button 
+                        onClick={() => updateQuantity(item.id, quantity + 1)}
+                        className="w-5 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
+                      >
+                        +
+                      </button>
+                    </div>
+                  );
+                })()}
               </div>
             </motion.div>
           ))}
