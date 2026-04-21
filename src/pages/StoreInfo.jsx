@@ -5,15 +5,15 @@ export default function StoreInfo() {
   const navigate = useNavigate();
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: 20 }} 
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       className="pb-28 space-y-5"
     >
       {/* Header with Back Button */}
       <div className="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-slate-800 sticky top-[68px] bg-[var(--bg-color)] z-20 pt-4 -mx-4 px-4">
-        <button 
-          onClick={() => navigate(-1)} 
+        <button
+          onClick={() => navigate(-1)}
           className="w-8 h-8 flex items-center justify-center glass rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors"
         >
           ←
@@ -22,7 +22,7 @@ export default function StoreInfo() {
       </div>
 
       <div className="space-y-5 pt-2">
-        
+
         {/* Title Section */}
         <div className="text-center space-y-2 mt-4">
           <div className="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-blue-500 rounded-2xl flex items-center justify-center text-4xl shadow-lg">
@@ -36,10 +36,14 @@ export default function StoreInfo() {
 
         {/* Map & Contact */}
         <div className="glass p-4 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden mt-6">
-          <div className="w-full h-40 bg-gray-200 dark:bg-slate-700 rounded-xl mb-4 relative overflow-hidden flex items-center justify-center">
-            {/* Map Placeholder Graphic */}
-            <div className="absolute inset-0 opacity-40 bg-[url('https://placehold.co/600x400/e2e8f0/64748b?text=Map+View')] bg-cover bg-center"></div>
-            <span className="text-4xl z-10 drop-shadow-md relative -top-2 animate-bounce">📍</span>
+          <div className="w-full h-48 rounded-xl mb-4 overflow-hidden">
+            <iframe
+              title="Arun Medicals Location"
+              src="https://www.google.com/maps?q=Arun+Medicals,Varanasi&output=embed"
+              className="w-full h-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 text-center">
             C.14/175-2, Sonia Road, Amar Nagar, Varanasi, Uttar Pradesh 221010
