@@ -11,6 +11,11 @@ export default function Product() {
   const [imgIndex, setImgIndex] = useState(0);
 
   const product = medicines.find((m) => m.id === parseInt(id));
+  
+  // NEW: State for selected variant (defaults to the first variant if they exist)
+  const [selectedVariant, setSelectedVariant] = useState(
+    product?.variants ? product.variants[0] : null
+  );
 
   if (!product) {
     return (
@@ -21,7 +26,21 @@ export default function Product() {
     );
   }
 
-  const discountedPrice = product.price - (product.price * product.discount / 100);
+  // NEW: Calculate pricing and stock dynamically based on the selected variant
+  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
+  const currentDiscount = selectedVariant ? selectedVariant.discount : product.discount;
+  const currentStock = selectedVariant ? selectedVariant.stock : product.stock;
+  const discountedPrice = currentPrice - (currentPrice * currentDiscount / 100);
+
+  const handleAddToCart = () => {
+    // Pass the specific variant details into the cart
+    addToCart({
+      ...product,
+      selectedVariant,
+      price: currentPrice,
+      discount: currentDiscount
+    });
+  };
 
   return (
     <motion.div 
@@ -50,7 +69,6 @@ export default function Product() {
           />
         </AnimatePresence>
         
-        {/* Pagination Dots */}
         {product.images.length > 1 && (
           <div className="absolute bottom-4 flex gap-2">
             {product.images.map((_, idx) => (
@@ -63,22 +81,20 @@ export default function Product() {
           </div>
         )}
 
-        {/* Labels */}
         <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
           {product.prescriptionRequired && (
             <div className="bg-rose-100 text-rose-700 dark:bg-rose-900/80 dark:text-rose-300 text-[10px] font-bold px-2 py-1 rounded shadow-sm">
               Rx Prescription Required
             </div>
           )}
-          {product.stock <= 5 && (
+          {currentStock <= 5 && (
             <div className="bg-orange-100 text-orange-700 dark:bg-orange-900/80 dark:text-orange-300 text-[10px] font-bold px-2 py-1 rounded shadow-sm">
-              Only {product.stock} left!
+              Only {currentStock} left!
             </div>
           )}
         </div>
       </div>
 
-      {/* Details Section */}
       <div className="pt-5 space-y-6">
         <div>
           <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">{product.category}</p>
@@ -93,15 +109,37 @@ export default function Product() {
         {/* Pricing */}
         <div className="flex items-center gap-3">
           <span className="text-3xl font-extrabold text-primary">₹{discountedPrice.toFixed(2)}</span>
-          {product.discount > 0 && (
+          {currentDiscount > 0 && (
             <>
-              <span className="text-lg text-gray-400 font-medium line-through">₹{product.price}</span>
+              <span className="text-lg text-gray-400 font-medium line-through">₹{currentPrice}</span>
               <span className="bg-green-100 border border-green-200 text-green-700 dark:border-green-800 dark:bg-green-900/50 dark:text-green-400 text-[10px] font-extrabold px-2 py-1 rounded-md tracking-wide">
-                {product.discount}% OFF
+                {currentDiscount}% OFF
               </span>
             </>
           )}
         </div>
+
+        {/* NEW: Dosage / Variant Selector */}
+        {product.variants && (
+          <div className="glass p-4 rounded-2xl border border-gray-100 dark:border-slate-800">
+            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-3">Select Dosage</p>
+            <div className="flex flex-wrap gap-2">
+              {product.variants.map((variant) => (
+                <button
+                  key={variant.variantId}
+                  onClick={() => setSelectedVariant(variant)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
+                    selectedVariant?.variantId === variant.variantId
+                      ? "bg-primary text-white shadow-lg shadow-primary/30 scale-105"
+                      : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"
+                  }`}
+                >
+                  {variant.dosage}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Info Cards */}
         <div className="grid grid-cols-2 gap-3">
@@ -111,7 +149,7 @@ export default function Product() {
           </div>
           <div className="glass p-3 rounded-2xl border border-gray-100 dark:border-slate-800">
             <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Dosage</p>
-            <p className="text-xs font-semibold leading-relaxed">{product.dosage}</p>
+            <p className="text-xs font-semibold leading-relaxed">{product.dosageInstructions || product.dosage}</p>
           </div>
         </div>
 
@@ -141,13 +179,12 @@ export default function Product() {
         </a>
         <motion.button 
           whileTap={{ scale: 0.95 }}
-          onClick={() => addToCart(product)}
+          onClick={handleAddToCart}
           className="flex-1 py-3.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 text-sm"
         >
           🛒 Add to Cart
         </motion.button>
       </div>
-
     </motion.div>
   );
 }

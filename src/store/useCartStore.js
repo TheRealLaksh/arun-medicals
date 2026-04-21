@@ -6,19 +6,31 @@ export const useCartStore = create(
     (set) => ({
       cart: [],
       addToCart: (item) => set((state) => {
-        const existing = state.cart.find(i => i.id === item.id);
+        // Create a unique ID for the cart item combining product ID and variant ID
+        const uniqueCartId = item.selectedVariant 
+          ? `${item.id}-${item.selectedVariant.variantId}` 
+          : `${item.id}`;
+
+        const existing = state.cart.find(i => i.cartItemId === uniqueCartId);
+        
         if (existing) {
-          return { cart: state.cart.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i) };
+          return { 
+            cart: state.cart.map(i => 
+              i.cartItemId === uniqueCartId ? { ...i, quantity: i.quantity + 1 } : i
+            ) 
+          };
         }
-        return { cart: [...state.cart, { ...item, quantity: 1 }] };
+        return { 
+          cart: [...state.cart, { ...item, cartItemId: uniqueCartId, quantity: 1 }] 
+        };
       }),
-      removeFromCart: (id) => set((state) => ({
-        cart: state.cart.filter((item) => item.id !== id),
+      removeFromCart: (cartItemId) => set((state) => ({
+        cart: state.cart.filter((item) => item.cartItemId !== cartItemId),
       })),
-      updateQuantity: (id, quantity) => set((state) => ({
+      updateQuantity: (cartItemId, quantity) => set((state) => ({
         cart: quantity > 0 
-          ? state.cart.map((item) => item.id === id ? { ...item, quantity } : item)
-          : state.cart.filter((item) => item.id !== id)
+          ? state.cart.map((item) => item.cartItemId === cartItemId ? { ...item, quantity } : item)
+          : state.cart.filter((item) => item.cartItemId !== cartItemId)
       })),
       clearCart: () => set({ cart: [] })
     }),
