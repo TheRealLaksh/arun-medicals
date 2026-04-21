@@ -9,8 +9,19 @@ export default function Home() {
   const { searchQuery, setSearchQuery } = useUIStore();
   const { cart, addToCart, updateQuantity } = useCartStore();
 
-  const getItemQuantity = (id) => {
-    const item = cart.find(i => i.id === id);
+  // Helper to find the lowest priced variant to display on the card
+  const getLowestVariant = (item) => {
+    if (!item.variants || item.variants.length === 0) return null;
+    return item.variants.reduce((prev, curr) => {
+      const prevPrice = prev.price - (prev.price * prev.discount / 100);
+      const currPrice = curr.price - (curr.price * curr.discount / 100);
+      return currPrice < prevPrice ? curr : prev;
+    });
+  };
+
+  const getItemQuantity = (itemId, variantId) => {
+    const uniqueCartId = `${itemId}-${variantId}`;
+    const item = cart.find(i => i.cartItemId === uniqueCartId);
     return item ? item.quantity : 0;
   };
 
@@ -62,14 +73,12 @@ export default function Home() {
         </div>
       </Link>
 
-      {/* 🚀 THE PRESCRIPTION UPLOAD FEATURE - Placed here for max visibility */}
       {!searchQuery && (
         <div className="-mx-4 md:mx-0">
           <PrescriptionBanner />
         </div>
       )}
 
-      {/* Instamart Style Grid Categories */}
       {!searchQuery && (
         <div className="space-y-3">
           <h3 className="font-extrabold text-lg tracking-tight px-1">Shop by Category</h3>
@@ -100,80 +109,92 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-            {filteredMedicines.slice(0, 12).map((item, i) => (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                key={item.id} 
-                className="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col relative"
-              >
-                {/* Badges */}
-                <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
-                  {item.tags.includes("Popular") && (
-                    <span className="bg-gradient-to-r from-orange-500 to-rose-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm">
-                      POPULAR
-                    </span>
-                  )}
-                  {item.discount > 0 && (
-                    <span className="bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-green-200 dark:border-green-500/30">
-                      {item.discount}% OFF
-                    </span>
-                  )}
-                </div>
-                
-                <Link to={`/product/${item.id}`} className="mt-1 mb-2 block">
-                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl aspect-square mb-3 flex items-center justify-center p-3 relative overflow-hidden">
-                    <img src={item.images[0]} alt={item.name} className="max-h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
-                  </div>
-                  <h3 className="text-xs md:text-sm font-bold line-clamp-2 leading-tight mb-1 text-gray-900 dark:text-white">{item.name}</h3>
-                  <p className="text-[10px] text-gray-500 font-semibold">{item.category}</p>
-                </Link>
+            {filteredMedicines.slice(0, 12).map((item, i) => {
+              const lowestVariant = getLowestVariant(item);
+              if (!lowestVariant) return null; // Skip if no variants exist
 
-                {/* Blinkit Style Add Button Row */}
-                <div className="mt-auto pt-2 flex items-center justify-between">
-                  <div>
-                    <p className="font-extrabold text-sm text-gray-900 dark:text-white">
-                      ₹{(item.price - (item.price * item.discount / 100)).toFixed(2)}
-                    </p>
-                    {item.discount > 0 && <p className="text-[10px] line-through text-gray-400 font-medium">₹{item.price}</p>}
+              const discountedPrice = lowestVariant.price - (lowestVariant.price * lowestVariant.discount / 100);
+
+              return (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  key={item.id} 
+                  className="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col relative"
+                >
+                  <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+                    {item.tags.includes("Popular") && (
+                      <span className="bg-gradient-to-r from-orange-500 to-rose-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-sm">
+                        POPULAR
+                      </span>
+                    )}
+                    {lowestVariant.discount > 0 && (
+                      <span className="bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-green-200 dark:border-green-500/30">
+                        {lowestVariant.discount}% OFF
+                      </span>
+                    )}
                   </div>
                   
-                  {/* DYNAMIC ADD / QUANTITY BUTTON */}
-                  {(() => {
-                    const quantity = getItemQuantity(item.id);
-                    if (quantity === 0) {
+                  <Link to={`/product/${item.id}`} className="mt-1 mb-2 block">
+                    <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl aspect-square mb-3 flex items-center justify-center p-3 relative overflow-hidden">
+                      <img src={item.images[0]} alt={item.name} className="max-h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
+                    </div>
+                    <h3 className="text-xs md:text-sm font-bold line-clamp-2 leading-tight mb-1 text-gray-900 dark:text-white">{item.name}</h3>
+                    {/* Display the dosage of the lowest variant directly below the name */}
+                    <p className="text-[10px] text-gray-500 font-semibold">{lowestVariant.dosage}</p>
+                  </Link>
+
+                  <div className="mt-auto pt-2 flex items-center justify-between">
+                    <div>
+                      <p className="font-extrabold text-sm text-gray-900 dark:text-white">
+                        ₹{discountedPrice.toFixed(2)}
+                      </p>
+                      {lowestVariant.discount > 0 && <p className="text-[10px] line-through text-gray-400 font-medium">₹{lowestVariant.price}</p>}
+                    </div>
+                    
+                    {(() => {
+                      const quantity = getItemQuantity(item.id, lowestVariant.variantId);
+                      const cartItemId = `${item.id}-${lowestVariant.variantId}`;
+                      
+                      if (quantity === 0) {
+                        return (
+                          <motion.button 
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => addToCart({
+                              ...item, 
+                              selectedVariant: lowestVariant, 
+                              price: lowestVariant.price, 
+                              discount: lowestVariant.discount
+                            })}
+                            className="border border-primary text-primary bg-primary/5 hover:bg-primary hover:text-white transition-colors px-4 py-1.5 rounded-lg font-extrabold text-xs shadow-sm"
+                          >
+                            ADD
+                          </motion.button>
+                        );
+                      }
                       return (
-                        <motion.button 
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => addToCart(item)}
-                          className="border border-primary text-primary bg-primary/5 hover:bg-primary hover:text-white transition-colors px-4 py-1.5 rounded-lg font-extrabold text-xs shadow-sm"
-                        >
-                          ADD
-                        </motion.button>
+                        <div className="flex items-center gap-1 bg-primary text-white rounded-lg px-1 py-1 shadow-sm h-[30px]">
+                          <button 
+                            onClick={() => updateQuantity(cartItemId, quantity - 1)}
+                            className="w-6 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
+                          >
+                            -
+                          </button>
+                          <span className="text-xs font-extrabold w-4 text-center">{quantity}</span>
+                          <button 
+                            onClick={() => updateQuantity(cartItemId, quantity + 1)}
+                            className="w-6 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
+                          >
+                            +
+                          </button>
+                        </div>
                       );
-                    }
-                    return (
-                      <div className="flex items-center gap-1 bg-primary text-white rounded-lg px-1 py-1 shadow-sm h-[30px]">
-                        <button 
-                          onClick={() => updateQuantity(item.id, quantity - 1)}
-                          className="w-6 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
-                        >
-                          -
-                        </button>
-                        <span className="text-xs font-extrabold w-4 text-center">{quantity}</span>
-                        <button 
-                          onClick={() => updateQuantity(item.id, quantity + 1)}
-                          className="w-6 h-full flex items-center justify-center font-bold text-sm active:scale-90 transition-transform"
-                        >
-                          +
-                        </button>
-                      </div>
-                    );
-                  })()}
-                </div>
-              </motion.div>
-            ))}
+                    })()}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </div>
